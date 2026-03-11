@@ -10,10 +10,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
    providePrimeNG({
    theme: {
-  preset: Aura, // Tema di default fornito da PrimeNG. Potete modificarlo
+  preset: Aura, 
   options: {
-  ripple: true, // Animazione grafica
-  darkModeSelector: '.my-app-dark', // Abilitazione tema scuro
+  ripple: true, 
+  darkModeSelector: '.my-app-dark', 
 },
 },
 }),

@@ -1,0 +1,22 @@
+:host {
+    display: block;
+    // Questa variabile diventa scura in Dark Mode e chiara in Light Mode
+    background-color: var(--surface-ground); 
+    color: var(--text-color);
+}
+
+.surface-card {
+    // La card interna deve seguire il colore della superficie del tema
+    background-color: var(--surface-card) !important;
+    border: 1px solid var(--surface-border);
+}
+
+::ng-deep .p-datatable.no-zebra .p-datatable-tbody > tr {
+    // Rimuoviamo il bianco fisso per usare la variabile del tema
+    background: var(--surface-card) !important;
+    color: var(--text-color) !important;
+
+    &:hover {
+        background-color: var(--surface-hover) !important;
+    }
+}

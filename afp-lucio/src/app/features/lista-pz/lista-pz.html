@@ -1,0 +1,29 @@
+<div class="p-4 bg-gray-50 min-h-screen">
+  <div class="flex mb-5 p-3 bg-white border-round shadow-1 align-items-center">
+    <i class="pi pi-search mr-2 text-400"></i>
+    <input 
+      pInputText 
+      type="text"
+      placeholder="Cerca paziente per nome o cognome..."
+      class="p-inputtext-sm w-full border-none shadow-none"
+      [ngModel]="nomePaziente()" 
+      (ngModelChange)="nomePaziente.set($event)"
+    >
+  </div>
+
+  <div class="flex flex-wrap gap-4 justify-content-center">
+    @for(pz of filteredList(); track pz.id) {
+        <app-card-pz [paziente]="pz"></app-card-pz>
+    } @empty {
+        <div class="text-center w-full mt-8">
+          <i class="pi pi-user-minus text-400 text-4xl mb-3"></i>
+          <p class="text-600">Nessun paziente trovato con il filtro: <b>{{nomePaziente()}}</b></p>
+        </div>
+    }
+  </div>
+</div>
+
+
+
+
+

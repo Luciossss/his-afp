@@ -1,39 +1,31 @@
-<p-card 
-    [header]="paziente().cognome + ' ' + paziente().nome" 
-    [subheader]="paziente().braccialetto + ' - ' + paziente().codiceColore"
-    [styleClass]="'w-full triage-border ' + setColoreDiStato()"
->
-    </p-card>
-    
-  <div class="mb-4 p-4">
-  <p-card 
-    [header]="paziente().cognome + ' ' + paziente().nome" 
-    [subheader]="paziente().braccialetto + ' - ' + paziente().codiceColore"
-    [styleClass]="'w-2xs border-top-3 ' + setColoreDiStato()"
-  >
-    <div class="p-content">
-      <h2 class="text-xl font-bold mb-2">Dati Identificativi</h2>
-      <p><b>Nome:</b> {{ paziente().nome }}</p>
-      <p><b>Cognome:</b> {{ paziente().cognome }}</p>
-      <p><b>Braccialetto:</b> {{ paziente().braccialetto }}</p>
-      
-      <hr class="my-3">
-      
-      <p>
-        <b>Patologia:</b> {{ paziente().patologia }}<br>
-        <b>Note Triage:</b> {{ paziente().note }}
-      </p>
+<p-card [styleClass]="'card-clinica ' + setColoreDiStato()">
+  <ng-template pTemplate="header">
+    <div class="p-3 border-bottom-1 border-50">
+      <div class="text-xl font-bold text-900 uppercase">{{paziente().cognome}} {{paziente().nome}}</div>
+      <div class="text-xs font-semibold text-500 mt-1 uppercase">{{paziente().braccialetto}}</div>
+    </div>
+  </ng-template>
 
-      <p class="m-0 text-sm text-600">
-        Informazioni riservate soggette a protocollo di sicurezza ospedaliera.
-      </p>
+  <div class="flex flex-column gap-3 py-2 text-900">
+    <div class="flex flex-column">
+      <span class="text-xs font-bold text-400 uppercase">Patologia</span>
+      <span class="font-medium">{{paziente().patologia}}</span>
     </div>
 
-    <ng-template pTemplate="footer">
-      <div class="flex gap-3">
-        <p-button label="Dimetti" severity="danger" icon="pi pi-sign-out"></p-button>
-        <p-button label="Aggiorna" icon="pi pi-refresh" (onClick)="cambiaNome()"></p-button>
-      </div>
-    </ng-template>
-  </p-card>
-</div>
+    <div class="flex flex-column border-top-1 border-50 pt-2">
+      <span class="text-xs font-bold text-400 uppercase">Note Cliniche</span>
+      <span class="text-sm text-700 italic">{{paziente().note}}</span>
+    </div>
+
+    <div class="flex justify-content-between pt-2 border-top-1 border-50 align-items-center">
+      <span class="text-xs font-bold text-400 uppercase">Età</span>
+      <span class="font-bold text-lg text-900">{{paziente().eta}} anni</span>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-end pt-2">
+      <p-button label="Dimetti" severity="danger" [text]="true" size="small"></p-button>
+    </div>
+  </ng-template>
+</p-card>
