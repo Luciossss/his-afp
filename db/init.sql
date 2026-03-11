@@ -22,6 +22,15 @@ $$
     END
 $$;
 
+DO
+$$
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'patient_sex') THEN
+            CREATE TYPE patient_sex AS ENUM ('M', 'F');
+        END IF;
+    END
+$$;
+
 -- 2. Tabelle di Lookup (Dizionari)
 
 -- A. Colori Triage
@@ -67,11 +76,12 @@ CREATE TABLE IF NOT EXISTS patients
     nome             VARCHAR(100)       NOT NULL,
     cognome          VARCHAR(100)       NOT NULL,
     data_nascita     DATE               NOT NULL,
+    sex              patient_sex        NOT NULL DEFAULT 'M',
     indirizzo_via    VARCHAR(255),
     indirizzo_civico VARCHAR(20),
     comune           VARCHAR(100),
     provincia        VARCHAR(5),
-    created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at       TIMESTAMP                   DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX IF NOT EXISTS idx_patients_cf ON patients (codice_fiscale);
 
@@ -130,12 +140,39 @@ VALUES ('medico', crypt('1234', gen_salt('bf', 10)), 'DOC'),
 ON CONFLICT (username) DO NOTHING;
 
 -- Paziente Demo
-INSERT INTO patients (nome, cognome, data_nascita, codice_fiscale, indirizzo_via, indirizzo_civico, comune, provincia)
-VALUES ('Mario', 'Rossi', '1980-05-20', 'RSSMRA80E20H501U', 'Via Roma', '10', 'Milano', 'MI')
+INSERT INTO patients (nome, cognome, data_nascita, sex, codice_fiscale, indirizzo_via, indirizzo_civico, comune,
+                      provincia)
+VALUES ('Mario', 'Rossi', '1980-05-20', 'M', 'RSSMRA80E20H501U', 'Via Roma', '10', 'Milano', 'MI')
 ON CONFLICT (codice_fiscale) DO NOTHING;
 
-INSERT INTO patients (nome, cognome, data_nascita, codice_fiscale, indirizzo_via, indirizzo_civico, comune, provincia)
-VALUES ('Luigi', 'Verdi', '1970-12-20', 'LUGVRDA70F234KK3', 'Via Molinari', '23', 'Trento', 'TN')
+INSERT INTO patients (nome, cognome, data_nascita, sex, codice_fiscale, indirizzo_via, indirizzo_civico, comune,
+                      provincia)
+VALUES ('Luigi', 'Verdi', '1970-12-20', 'M', 'LUGVRDA70F234KK3', 'Via Molinari', '23', 'Trento', 'TN')
+ON CONFLICT (codice_fiscale) DO NOTHING;
+
+INSERT INTO patients (nome, cognome, data_nascita, sex, codice_fiscale, indirizzo_via, indirizzo_civico, comune,
+                      provincia)
+VALUES ('Anna', 'Bianchi', '1990-03-15', 'F', 'BNCNNA90C55H501A', 'Via Garibaldi', '5', 'Roma', 'RM')
+ON CONFLICT (codice_fiscale) DO NOTHING;
+
+INSERT INTO patients (nome, cognome, data_nascita, sex, codice_fiscale, indirizzo_via, indirizzo_civico, comune,
+                      provincia)
+VALUES ('Giovanni', 'Neri', '1955-11-30', 'M', 'NREGNN55S30F205Z', 'Corso Umberto', '12', 'Napoli', 'NA')
+ON CONFLICT (codice_fiscale) DO NOTHING;
+
+INSERT INTO patients (nome, cognome, data_nascita, sex, codice_fiscale, indirizzo_via, indirizzo_civico, comune,
+                      provincia)
+VALUES ('Francesca', 'Romani', '1985-07-22', 'F', 'RMNFNC85L62L219K', 'Via Po', '45', 'Torino', 'TO')
+ON CONFLICT (codice_fiscale) DO NOTHING;
+
+INSERT INTO patients (nome, cognome, data_nascita, sex, codice_fiscale, indirizzo_via, indirizzo_civico, comune,
+                      provincia)
+VALUES ('Marco', 'Esposito', '2000-01-10', 'M', 'SPSMRC00A10F839V', 'Piazza Trieste', '8', 'Venezia', 'VE')
+ON CONFLICT (codice_fiscale) DO NOTHING;
+
+INSERT INTO patients (nome, cognome, data_nascita, sex, codice_fiscale, indirizzo_via, indirizzo_civico, comune,
+                      provincia)
+VALUES ('Elena', 'Ferrari', '1975-09-05', 'F', 'FRRLNE75P45D612J', 'Viale dei Pini', '33', 'Firenze', 'FI')
 ON CONFLICT (codice_fiscale) DO NOTHING;
 
 -- Accesso Demo
@@ -164,3 +201,70 @@ SELECT id,
 FROM patients
 WHERE codice_fiscale = 'LUGVRDA70F234KK3'
 ON CONFLICT (braccialetto) DO NOTHING;
+
+-- Accessi Nuovi Pazienti
+INSERT INTO admissions (patient_id, braccialetto, stato, patologia_code, codice_colore, modalita_arrivo_code,
+                        note_triage)
+SELECT id,
+       TO_CHAR(CURRENT_DATE, 'YYYY') || '-0003',
+       'ATT',
+       'C03',
+       'VERDE',
+       'AUT',
+       'Tosse persistente da 3 giorni'
+FROM patients
+WHERE codice_fiscale = 'BNCNNA90C55H501A'
+ON CONFLICT (braccialetto) DO NOTHING;
+
+INSERT INTO admissions (patient_id, braccialetto, stato, patologia_code, codice_colore, modalita_arrivo_code,
+                        note_triage)
+SELECT id,
+       TO_CHAR(CURRENT_DATE, 'YYYY') || '-0004',
+       'VIS',
+       'C02',
+       'ARANCIONE',
+       'AMB',
+       'Dolore toracico oppressivo'
+FROM patients
+WHERE codice_fiscale = 'NREGNN55S30F205Z'
+ON CONFLICT (braccialetto) DO NOTHING;
+
+INSERT INTO admissions (patient_id, braccialetto, stato, patologia_code, codice_colore, modalita_arrivo_code,
+                        note_triage)
+SELECT id,
+       TO_CHAR(CURRENT_DATE, 'YYYY') || '-0005',
+       'RIC',
+       'C04',
+       'ROSSO',
+       'ELI',
+       'Perdita di coscienza prolungata'
+FROM patients
+WHERE codice_fiscale = 'RMNFNC85L62L219K'
+ON CONFLICT (braccialetto) DO NOTHING;
+
+INSERT INTO admissions (patient_id, braccialetto, stato, patologia_code, codice_colore, modalita_arrivo_code,
+                        note_triage)
+SELECT id,
+       TO_CHAR(CURRENT_DATE, 'YYYY') || '-0006',
+       'OBI',
+       'C05',
+       'BIANCO',
+       'AUT',
+       'Stato ansioso lieve'
+FROM patients
+WHERE codice_fiscale = 'SPSMRC00A10F839V'
+ON CONFLICT (braccialetto) DO NOTHING;
+
+INSERT INTO admissions (patient_id, braccialetto, stato, patologia_code, codice_colore, modalita_arrivo_code,
+                        note_triage)
+SELECT id,
+       TO_CHAR(CURRENT_DATE, 'YYYY') || '-0007',
+       'DIM',
+       'C19',
+       'AZZURRO',
+       'AMB',
+       'Febbre alta e dolori articolari'
+FROM patients
+WHERE codice_fiscale = 'FRRLNE75P45D612J'
+ON CONFLICT (braccialetto) DO NOTHING;
+
