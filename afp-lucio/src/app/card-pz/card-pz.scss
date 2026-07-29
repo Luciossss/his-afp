@@ -1,0 +1,12 @@
+/* Stile base per il bordo superiore */
+.triage-border {
+    border-top: 8px solid !important; /* Spessore del bordo */
+}
+
+/* Varianti di colore */
+.border-red-600 { border-color: #dc2626 !important; }
+.border-orange-500 { border-color: #f97316 !important; }
+.border-yellow-400 { border-color: #facc15 !important; }
+.border-green-600 { border-color: #16a34a !important; }
+.border-blue-600 { border-color: #2563eb !important; }
+.border-gray-400 { border-color: #9ca3af !important; }

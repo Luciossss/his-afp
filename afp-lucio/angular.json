@@ -3,21 +3,20 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "analytics": "4e173c2d-4be6-4a22-be53-aa2948d2d023"
+    "analytics": "bc169581-496f-421b-a5e7-3f48ca04ced6"
   },
   "newProjectRoot": "projects",
   "projects": {
-    "his-afp": {
+    "afp-lucio": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss",
-          "changeDetection": "OnPush"
+          "style": "scss"
         }
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "his",
+      "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
@@ -31,7 +30,10 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss", "src/tailwind.config.css"]
+            "styles": [
+              "src/styles.scss",
+              "src/tailwind.config.css"
+            ]
           },
           "configurations": {
             "production": {
@@ -52,28 +54,19 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
-                }
-              ]
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular/build:dev-server",
-          "options": {
-            "proxyConfig": "proxy.conf.json"
-          },
           "configurations": {
             "production": {
-              "buildTarget": "his-afp:build:production"
+              "buildTarget": "afp-lucio:build:production"
             },
             "development": {
-              "buildTarget": "his-afp:build:development"
+              "buildTarget": "afp-lucio:build:development"
             }
           },
           "defaultConfiguration": "development"

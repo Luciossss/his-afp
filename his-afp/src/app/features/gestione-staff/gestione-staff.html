@@ -1,0 +1,97 @@
+<div class="p-6 space-y-8 max-w-6xl mx-auto">
+  <h1 class="text-2xl font-bold text-gray-800">Gestione Staff Sanitario</h1>
+
+  <div *ngIf="successMessage" class="p-4 bg-green-100 text-green-800 rounded-md border border-green-300">
+    {{ successMessage }}
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-lg font-semibold mb-4 text-gray-700">Aggiungi Nuovo Membro Staff</h2>
+    
+    <form [formGroup]="staffForm" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+      <div>
+        <label for="usernameInput" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+        <input 
+          id="usernameInput"
+          type="text" 
+          formControlName="username"
+          placeholder="es. m.rossi"
+          class="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+          [ngClass]="{'border-red-500': usernameControl?.touched && usernameControl?.invalid}"
+        />
+        
+        <div *ngIf="usernameControl?.touched && usernameControl?.invalid" class="text-red-500 text-xs mt-1">
+          <span *ngIf="usernameControl?.errors?.['required']">Lo username è obbligatorio.</span>
+          <span *ngIf="usernameControl?.errors?.['minlength']">Almeno 3 caratteri.</span>
+          <span *ngIf="usernameControl?.errors?.['usernameTaken']">Username già in uso!</span>
+        </div>
+        <div *ngIf="usernameControl?.pending" class="text-blue-500 text-xs mt-1">
+          Verifica disponibilità in corso...
+        </div>
+      </div>
+
+      <div>
+        <label for="newRoleSelect" class="block text-sm font-medium text-gray-700 mb-1">Ruolo</label>
+        <select 
+          id="newRoleSelect"
+          formControlName="role" 
+          class="w-full border rounded-md px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+          <option *ngFor="let role of roles; trackBy: trackByRole" [value]="role">{{ role }}</option>      
+        </select>
+      </div>
+
+      <div class="md:mt-6">
+        <button 
+          type="submit" 
+          [disabled]="staffForm.invalid || staffForm.pending"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md disabled:bg-gray-400 transition-colors">
+          Crea Utente
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-lg font-semibold mb-4 text-gray-700">Elenco Personale</h2>
+
+    <div *ngIf="userService.loading()" class="text-gray-500 py-4">Caricamento staff...</div>
+    <div *ngIf="userService.error()" class="text-red-500 py-4">{{ userService.error() }}</div>
+
+    <table *ngIf="!userService.loading() && userService.users().length > 0" class="w-full text-left border-collapse">
+      <thead>
+        <tr class="border-b bg-gray-50">
+          <th class="p-3 text-sm font-semibold text-gray-600">ID</th>
+          <th class="p-3 text-sm font-semibold text-gray-600">Username</th>
+          <th class="p-3 text-sm font-semibold text-gray-600">Ruolo Attuale</th>
+          <th class="p-3 text-sm font-semibold text-gray-600">Modifica Ruolo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of userService.users(); trackBy: trackById" class="border-b hover:bg-gray-50">
+          <td class="p-3 text-sm text-gray-700">{{ user.id }}</td>
+          <td class="p-3 text-sm font-medium text-gray-800">{{ user.username }}</td>
+          <td class="p-3 text-sm">
+            <span class="px-2 py-1 rounded text-xs font-semibold"
+              [ngClass]="{
+                'bg-blue-100 text-blue-800': user.role === 'DOC',
+                'bg-green-100 text-green-800': user.role === 'INF',
+                'bg-purple-100 text-purple-800': user.role === 'AMM'
+              }">
+              {{ user.role }}
+            </span>
+          </td>
+          <td class="p-3 text-sm">
+            <select 
+              [id]="'changeRole_' + user.id"
+              [attr.aria-label]="'Modifica ruolo per utente ' + user.username"
+              [value]="user.role" 
+              (change)="user.id !== undefined && onRoleChange(user.id, $event)"
+              class="border rounded px-2 py-1 text-xs bg-white focus:ring-1 focus:ring-blue-500">
+              <option *ngFor="let role of roles; trackBy: trackByRole" [value]="role">{{ role }}</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

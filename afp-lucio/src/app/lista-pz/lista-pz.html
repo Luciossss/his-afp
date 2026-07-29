@@ -1,0 +1,28 @@
+<label for="cercaPazienteOld" class="sr-only">Cerca paziente</label>
+<input
+  id="cercaPazienteOld"
+  pInputText 
+  type="text"
+  [ngModel]="nomePaziente()" 
+  (ngModelChange)="nomePaziente.set($event)"
+  placeholder="Cerca paziente..."
+>
+
+<div class="flex flex-wrap flex-row gap-4 p-4">
+    @for(pz of filteredList(); track pz.id) {
+        <app-card-pz 
+            class="block mb-4" 
+            [paziente]="pz">
+        </app-card-pz>
+
+        <p-button 
+            label="Edit"
+            (onClick)="editnomePaziente(pz.nome)">
+        </p-button>
+
+        <h1>{{pz.cognome}} {{pz.nome}}</h1>
+        <hr>
+    } @empty {
+        <h1>Nessun paziente trovato con questo nome</h1>
+    }
+</div>

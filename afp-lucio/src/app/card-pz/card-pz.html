@@ -1,0 +1,39 @@
+<p-card 
+    [header]="paziente().cognome + ' ' + paziente().nome" 
+    [subheader]="paziente().braccialetto + ' - ' + paziente().codiceColore"
+    [styleClass]="'w-full triage-border ' + setColoreDiStato()"
+>
+    </p-card>
+    
+  <div class="mb-4 p-4">
+  <p-card 
+    [header]="paziente().cognome + ' ' + paziente().nome" 
+    [subheader]="paziente().braccialetto + ' - ' + paziente().codiceColore"
+    [styleClass]="'w-2xs border-top-3 ' + setColoreDiStato()"
+  >
+    <div class="p-content">
+      <h2 class="text-xl font-bold mb-2">Dati Identificativi</h2>
+      <p><b>Nome:</b> {{ paziente().nome }}</p>
+      <p><b>Cognome:</b> {{ paziente().cognome }}</p>
+      <p><b>Braccialetto:</b> {{ paziente().braccialetto }}</p>
+      
+      <hr class="my-3">
+      
+      <p>
+        <b>Patologia:</b> {{ paziente().patologia }}<br>
+        <b>Note Triage:</b> {{ paziente().note }}
+      </p>
+
+      <p class="m-0 text-sm text-600">
+        Informazioni riservate soggette a protocollo di sicurezza ospedaliera.
+      </p>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="flex gap-3">
+        <p-button label="Dimetti" severity="danger" icon="pi pi-sign-out"></p-button>
+        <p-button label="Aggiorna" icon="pi pi-refresh" (onClick)="cambiaNome()"></p-button>
+      </div>
+    </ng-template>
+  </p-card>
+</div>
