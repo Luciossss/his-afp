@@ -1,0 +1,55 @@
+<div class="p-6">
+  <p-card header="Monitor Dimessi (Ultime 24 ore)">
+    <p class="text-gray-600 mb-4">
+      Dashboard di sola consultazione: elenco dei pazienti dimessi dal Pronto Soccorso nelle ultime 24h.
+    </p>
+
+    <p-table
+      [value]="dischargedPatients()"
+      [paginator]="true"
+      [rows]="10"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      sortField="dataOraDimissione"
+      [sortOrder]="-1"
+      styleClass="p-datatable-striped"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="braccialetto">
+            Codice Identificativo <p-sortIcon field="braccialetto" />
+          </th>
+          <th pSortableColumn="cognome">
+            Paziente <p-sortIcon field="cognome" />
+          </th>
+          <th>Codice Fiscale</th>
+          <th pSortableColumn="dataOraDimissione">
+            Data e Ora Dimissione <p-sortIcon field="dataOraDimissione" />
+          </th>
+          <th>Stato</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-patient>
+        <tr>
+          <td>
+            <span class="font-bold text-primary">{{ patient.braccialetto }}</span>
+          </td>
+          <td>{{ patient.cognome }} {{ patient.nome }}</td>
+          <td>{{ patient.codiceFiscale }}</td>
+          <td>{{ patient.dataOraDimissione | date: 'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <p-tag value="DIMESSO" severity="secondary" />
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center p-4">
+            Nessun paziente dimesso nelle ultime 24 ore.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>

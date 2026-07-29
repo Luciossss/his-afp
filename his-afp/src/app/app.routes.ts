@@ -15,6 +15,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/modifica-pz/modifica-pz').then((m) => m.ModificaPz),
   },
   {
+    path: 'monitor-dimessi',
+    loadComponent: () =>
+      import('./features/monitor-dimessi/monitor-dimessi').then((m) => m.MonitorDimessi),
+  },
+  {
     path: 'stato-servizi',
     loadComponent: () =>
       import('./features/stato-servizi/stato-servizi').then((m) => m.StatoServizi),
